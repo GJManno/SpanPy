@@ -2,7 +2,7 @@
 
 # check option 1 = list of self.names and zip with master_dict[]
 
-import json
+import json, random
 
 class Dictionary(object):
 
@@ -10,6 +10,7 @@ class Dictionary(object):
         self.name = name
         self.isWorking = False
         self.dictionary = {}
+        self.high_score = 0
 
 ###############################################################################
 ##        
@@ -41,8 +42,9 @@ class Dictionary(object):
 
 ###############################################################################
 ##        
-## save() takes self.dictionary and appends to 'master_dict.txt'
-##
+## push() takes self.dictionary and appends to 'master_dict.txt'
+##        
+## *if not in list.. store self.name append to end else.. write over index. 
 ###############################################################################
            
     def push(self):
@@ -63,7 +65,7 @@ class Dictionary(object):
 
 ###############################################################################
 ##        
-## add() & delete() manipulates self.dictionary, define() prints a definition
+## add() & delete() & define() & show() & rename()
 ##
 ###############################################################################
             
@@ -83,17 +85,69 @@ class Dictionary(object):
         if word.title() in self.dictionary:
             print(self.dictionary[word.title()])
 
+    def show(self):
+        for key in self.dictionary:
+            print("{:<12s} {:<5s} {}".format(key, "-",self.dictionary[key]))
 
+    def rename(self, name):
+        self.name = name
 
+    def test(self):
+        # consider changing to writing the word, too similar to flash
+        score = 0
+        questions = list(self.dictionary.keys())
+        self.count = len(questions)
+        print("Total Questions = {}".format(self.count))
+        print()
+        random.shuffle(questions)
+        for word in questions:
+            print(word)
+            print('='*25)
+            a = input('Know It? (y/n):')
+            if a.lower() == "y":
+                score += 1
+                print()
+                print("Answer:\t", self.dictionary[word])
+                print()
+            elif a.lower() == "n":
+                print()
+                print("Answer:\t", self.dictionary[word])
+                print()
+            else:
+                print()
+                print("No Score Recorded")
+        print("========== END OF TEST ==========")
+        grade = round((score/self.count)* 100, 2)
+        print("Your Score is:", score, "out of ", self.count)
+        if grade >= 90:
+            print("You got an A", "(", grade, "%)")
+        elif grade < 90 and grade >= 80:
+            print("You got a B", "(", grade, "%)")
+        elif grade < 80 and grade >= 70:
+            print("You got a C", "(", grade, "%)")
+        elif grade < 70 and grade >= 60:
+            print("You got a D", "(", grade, "%)")
+        elif grade < 60:
+            print("You got an F", "(", grade, "%)")
+        print()
+        if score > self.high_score:
+            self.high_score = score
+            print("NEW HIGH SCORE!!!")
+        else:
+            print("Nice Try... Score To Beat ({})".format(self.high_score))
+## must add db layer CSV ?
 
-
-
+    def get_high_score(self):
+        return self.high_score
+    
+    def shuffle(self):
+        
 
 
             
 
         
-##    def test(self):
+##    def tester(self):
 ##        print(self.word_list)
 ##        print(self.def_list)
 ##        print(self.zipper[0][0])
@@ -104,7 +158,6 @@ class Dictionary(object):
 ##            print(items[0])
 ##            print(items[1])
 ##        print(self.dictionary)
-##        print(len(self.dictionary))
 ##        print(len(self.word_list))
 ##        print(len(self.def_list))
 ##        for x in self.def_list:
@@ -133,5 +186,5 @@ class Dictionary(object):
 #
 ##        >>> span_dict = Dictionary('first_dict')
 ##        >>> span_dict.consolidate('spanish_words.txt', 'spanish_defs.txt')
-##        >>> span_dict.test()
+##        >>> span_dict.tester()
         
