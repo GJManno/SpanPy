@@ -92,18 +92,20 @@ class Dictionary(object):
     def rename(self, name):
         self.name = name
 
-    def test(self):
+    def test(self, mod=None):
         # consider changing to writing the word, too similar to flash
+        if mod is not None:
+            keys = mod()
+        else:
+            keys = self.dictionary.keys()
         score = 0
-        questions = list(self.dictionary.keys())
-        self.count = len(questions)
+        self.count = len(keys)
         print("Total Questions = {}".format(self.count))
         print()
-        random.shuffle(questions)
-        for word in questions:
+        for word in keys:
             print(word)
             print('='*25)
-            a = input('Know It? (y/n):')
+            a = input('(y/n):\t')
             if a.lower() == "y":
                 score += 1
                 print()
@@ -133,14 +135,19 @@ class Dictionary(object):
         if score > self.high_score:
             self.high_score = score
             print("NEW HIGH SCORE!!!")
+            # add db layer to save score CSV (self.name, self.count, self.high_score)
         else:
             print("Nice Try... Score To Beat ({})".format(self.high_score))
-## must add db layer CSV ?
 
     def get_high_score(self):
         return self.high_score
     
     def shuffle(self):
+        list_of_keys = list(self.dictionary.keys())
+        random.shuffle(list_of_keys)
+        return list_of_keys
+        
+        
         
 
 
@@ -165,9 +172,9 @@ class Dictionary(object):
 ##                print("here  ",x)
 ##            else:
 ##                print("not here!!!!!!!  ",x)
-##            print(len(self.master_dict[0]))          <-- will need to recreate attribute to run
+##            print(len(self.master_dict[0]))          
 ##            print(len(self.master_dict[1]))
-
+##      span_dict.test(mod=span_dict.shuffle)  <--- for (mod=shuffle) take outside of class
 
 
 
@@ -184,7 +191,7 @@ class Dictionary(object):
 #  used as reference // tester
 #  https://stackoverflow.com/questions/18067334/passing-a-file-to-a-class
 #
-##        >>> span_dict = Dictionary('first_dict')
-##        >>> span_dict.consolidate('spanish_words.txt', 'spanish_defs.txt')
-##        >>> span_dict.tester()
+exec('''
+span_dict = Dictionary('first_dict')
+span_dict.consolidate('spanish_words.txt', 'spanish_defs.txt')''')
         
