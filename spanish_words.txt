@@ -144,7 +144,7 @@ P(a)jaro
 P(u)rpura
 Calcet(i)n
 Su(e)ter
-Cama
-Ya
 Escoger
 Anilo
+Cama
+Ya

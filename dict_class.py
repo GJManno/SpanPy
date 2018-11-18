@@ -1,16 +1,25 @@
 # save() needs to update self.dictionary, push() needs to send to master_dict <needs self.name check>
-
 # check option 1 = list of self.names and zip with master_dict[]
 
 import json, random
 
+
+
+
+## [print(i)for i in dict_of_dicts]
+     # loops over dict_names, in differnt order every time
+
+# can also enumerate over dict keys like so
+## [print(i,j) for i,j, in enumerate(self.dictionary)]
+    
 class Dictionary(object):
 
     def __init__(self, name):
         self.name = name
-        self.isWorking = False
+        self.isActive = False
         self.dictionary = {}
         self.high_score = 0
+        self.count = len(self.dictionary)
 
 ###############################################################################
 ##        
@@ -44,7 +53,8 @@ class Dictionary(object):
 ##        
 ## push() takes self.dictionary and appends to 'master_dict.txt'
 ##        
-## *if not in list.. store self.name append to end else.. write over index. 
+## *if not in list.. store self.name append to end else.. write over index.
+##  push will need to acces dict of dicts and loop over each as i.self.dictionary where i is index       
 ###############################################################################
            
     def push(self):
@@ -65,13 +75,14 @@ class Dictionary(object):
 
 ###############################################################################
 ##        
-## add() & delete() & define() & show() & rename()
+## add() & delete() & define() & show() & rename() & move() & count()
 ##
 ###############################################################################
             
     def add(self, word, definition):
         if word.title() not in self.dictionary:
             self.dictionary[word.title()]= definition.title()
+            print(word.title(),'has been added to', self.name, 'dict')
         else:
             print(word, " already in dictionary")
 
@@ -85,17 +96,39 @@ class Dictionary(object):
         if word.title() in self.dictionary:
             print(self.dictionary[word.title()])
 
-    def show(self):
-        for key in self.dictionary:
-            print("{:<12s} {:<5s} {}".format(key, "-",self.dictionary[key]))
-
     def rename(self, name):
         self.name = name
+        # rename in list_of_dicts
+        # rename list_of_files
+
+    def move(self, word, destination):
+        if word.title() in self.dictionary:
+            if destination in dict_of_dicts.keys():
+                obj = dict_of_dicts[destination]
+                obj.dictionary[word.title()] = self.dictionary[word.title()]
+                del self.dictionary[word.title()]
+            else:
+                print('Invalid destination')
+        else:
+            print('Word not in dictionary')
+            
+    def move_all(self, destination): #Running into KeyError b/c we have not converted to UTF-8
+        if destination in dict_of_dicts.keys():
+            obj = dict_of_dicts[destination]
+            for word in self.dictionary.keys():
+                obj.dictionary[word.title()] = self.dictionary[word.title()]
+        else:
+            print('Invalid destination')
+        for word in self.dictionary.keys():
+            del self.dictionary[word.title()]
+
+    def count(self):
+        print(self.count)   
 
     def test(self, mod=None):
         # consider changing to writing the word, too similar to flash
         if mod is not None:
-            keys = mod()
+                keys = mod()
         else:
             keys = self.dictionary.keys()
         score = 0
@@ -138,21 +171,17 @@ class Dictionary(object):
             # add db layer to save score CSV (self.name, self.count, self.high_score)
         else:
             print("Nice Try... Score To Beat ({})".format(self.high_score))
+        # create self.last_flash and update here using datetime module
 
     def get_high_score(self):
         return self.high_score
     
     def shuffle(self):
+        # consider taking test() mods out of class to simplify the pass i.e. (mod=shuffle) not (mod=self.shuffle)
         list_of_keys = list(self.dictionary.keys())
         random.shuffle(list_of_keys)
         return list_of_keys
         
-        
-        
-
-
-            
-
         
 ##    def tester(self):
 ##        print(self.word_list)
@@ -174,24 +203,30 @@ class Dictionary(object):
 ##                print("not here!!!!!!!  ",x)
 ##            print(len(self.master_dict[0]))          
 ##            print(len(self.master_dict[1]))
-##      span_dict.test(mod=span_dict.shuffle)  <--- for (mod=shuffle) take outside of class
+##      span_dict.test(mod=span_dict.shuffle)
+
+
+animals = Dictionary('animals')
+body = Dictionary('body')
+nature = Dictionary('nature')
+foodbev = Dictionary('foodbev')
+past = Dictionary('past')
+future = Dictionary('future')
+phrases = Dictionary('phrases')
+irregulars = Dictionary('irregulars')
+verbs = Dictionary('verbs')
+adjectives = Dictionary('adjectives')
+nouns = Dictionary('nouns')
+WOTD = Dictionary('WOTD')
+reserves = Dictionary('reserves')
+
+list_of_dicts = [animals, body, nature, foodbev, past, future, phrases, irregulars, verbs,
+                 adjectives, nouns, WOTD, reserves]
+
+list_of_files = ['animals.txt','body.txt']
 
 
 
-
-
-
-
-
-
-
-
-        
-
-#  used as reference // tester
-#  https://stackoverflow.com/questions/18067334/passing-a-file-to-a-class
-#
-exec('''
-span_dict = Dictionary('first_dict')
-span_dict.consolidate('spanish_words.txt', 'spanish_defs.txt')''')
-        
+# something to test with
+reserves.consolidate('spanish_words.txt', 'spanish_defs.txt') 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
